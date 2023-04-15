@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useState, useEffect, useReducer, useContext } from "react";
 
 import Card from "../UI/Card/Card";
 import classes from "./Login.module.css";
 import Button from "../UI/Button/Button";
+import AuthContext from "../../store/auth-context";
 
 const emailReducer = (state, action) => {
   if (action.type === "USER_INPUT") {
@@ -11,7 +12,7 @@ const emailReducer = (state, action) => {
   if (action.type === "INPUT_BLUR") {
     return { value: state.value, isValid: state.value.includes("@") };
   }
-  return { value: '', isValid: false };
+  return { value: "", isValid: false };
 };
 
 const passwordReducer = (state, action) => {
@@ -21,7 +22,7 @@ const passwordReducer = (state, action) => {
   if (action.type === "INPUT_BLUR") {
     return { value: state.value, isValid: state.value.trim().length > 6 };
   }
-  return { value: '', isValid: false };
+  return { value: "", isValid: false };
 };
 
 const collegeNameReducer = (state, action) => {
@@ -31,7 +32,7 @@ const collegeNameReducer = (state, action) => {
   if (action.type === "INPUT_BLUR") {
     return { value: state.value, isValid: state.value.includes("College") };
   }
-  return { value: '', isValid: false };
+  return { value: "", isValid: false };
 };
 
 const Login = (props) => {
@@ -44,22 +45,24 @@ const Login = (props) => {
   const [formIsValid, setFormIsValid] = useState(false);
 
   const [emailState, dispatchEmail] = useReducer(emailReducer, {
-    value: '',
+    value: "",
     isValid: null,
   });
 
   const [passwordState, dispatchPassword] = useReducer(passwordReducer, {
-    value: '',
+    value: "",
     isValid: null,
   });
 
   const [collegeNameState, dispatchCollegeName] = useReducer(
     collegeNameReducer,
     {
-      value: '',
+      value: "",
       isValid: null,
     }
   );
+
+  const authCtx = useContext(AuthContext);
 
   useEffect(() => {
     console.log("Effect Running");
@@ -131,7 +134,7 @@ const Login = (props) => {
 
   const submitHandler = (event) => {
     event.preventDefault();
-    props.onLogin(
+    authCtx.onLogin(
       emailState.value,
       passwordState.value,
       collegeNameState.value
@@ -143,7 +146,7 @@ const Login = (props) => {
       <form onSubmit={submitHandler}>
         <div
           className={`${classes.control} ${
-            emailState.isValid === false ? classes.invalid : ''
+            emailState.isValid === false ? classes.invalid : ""
           }`}
         >
           <label htmlFor="email">E-Mail</label>
@@ -157,7 +160,7 @@ const Login = (props) => {
         </div>
         <div
           className={`${classes.control} ${
-            passwordState.isValid === false ? classes.invalid : ''
+            passwordState.isValid === false ? classes.invalid : ""
           }`}
         >
           <label htmlFor="password">Password</label>
@@ -171,7 +174,7 @@ const Login = (props) => {
         </div>
         <div
           className={`${classes.control} ${
-            collegeNameState.isValid === false ? classes.invalid : ''
+            collegeNameState.isValid === false ? classes.invalid : ""
           }`}
         >
           <label htmlFor="collegename">College Name</label>
